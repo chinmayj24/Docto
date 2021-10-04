@@ -1,0 +1,59 @@
+name: docto
+description: A new Flutter application.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  firebase_core: ^1.1.1
+  cupertino_icons: ^1.0.0
+  cloud_firestore: ^1.0.7
+  permission_handler: 3.0.0
+  firebase_auth: ^1.1.4
+  google_sign_in: ^5.0.2
+  geolocator: ^5.3.1
+  image_picker: ^0.7.5
+  firebase_storage: ^8.0.6
+  emoji_picker: ^0.1.0
+  flutter_signin_button: ^2.0.0
+  path_provider: ^2.0.1
+  image: ^3.0.2
+  provider: ^5.0.0
+  agora_rtc_engine: ^1.0.8
+  flutter_switch: ^0.3.1
+  awesome_dialog: ^2.1.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/docprofile/
+    - assets/images/docinfo/bg1.png
+    - assets/images/logo.png
+    - assets/images/welcome.png
+    - assets/images/specialist.png
+    - assets/images/immunisation.png
+    - assets/images/sexual_health.png
+    - assets/images/general_practice.png
+    - assets/images/img.jpeg
+    - assets/images/docinfo/doctor.png
+    - assets/images/
+  fonts:
+    - family: avenir
+      fonts:
+        - asset: assets/font/avenir.ttf
