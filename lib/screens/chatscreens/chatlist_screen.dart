@@ -69,7 +69,8 @@ class ChatListContainer extends StatelessWidget {
                   }
                   return ListView.builder(
                     padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.height * 0.01),
+                      MediaQuery.of(context).size.height * 0.01,
+                    ),
                     itemCount: docList.length,
                     itemBuilder: (context, index) {
                       /*Contact contact = Contact.fromMap(docList[index].data);*/

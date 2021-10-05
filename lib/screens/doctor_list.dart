@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:docto/models/contacts.dart';
+import 'package:docto/models/request.dart';
 import 'package:docto/provider/patient_provider.dart';
 import 'package:docto/screens/patient_homepage.dart';
 import 'package:docto/utils/utilities.dart';
@@ -178,12 +179,14 @@ class _DocListState extends State<DocList> with TickerProviderStateMixin {
         } else if (snapshot.connectionState == ConnectionState.done &&
             !snapshot.hasData) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
-            Contact contact = Contact(
-                uid: patientProvider.getPatient.uid, adddedOn: Timestamp.now());
+            Request request = Request(
+              uid: patientProvider.getPatient.uid,
+              adddedOn: Timestamp.now(),
+            );
             firestore
-                .collection('requests')
+                .collection(UniversalVariables.REQUESTS_COLLECTION)
                 .doc(patientProvider.getPatient.uid)
-                .set(contact.toMap(contact));
+                .set(request.toMap(request));
             return AwesomeDialog(
               context: context,
               dialogType: DialogType.INFO,

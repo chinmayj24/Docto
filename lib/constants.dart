@@ -50,4 +50,6 @@ class UniversalVariables {
   static final String CALL_COLLECTION = "calls";
   // ignore: non_constant_identifier_names
   static final String MESSAGE_TYPE_IMAGE = "image";
+  // ignore: non_constant_identifier_names
+  static final String REQUESTS_COLLECTION = "requests";
 }
