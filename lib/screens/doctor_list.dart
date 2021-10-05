@@ -176,7 +176,7 @@ class _DocListState extends State<DocList> with TickerProviderStateMixin {
               ],
             ),
           );
-        } else if (snapshot.connectionState == ConnectionState.done &&
+        } /*else if (snapshot.connectionState == ConnectionState.done &&
             !snapshot.hasData) {
           SchedulerBinding.instance.addPostFrameCallback((_) {
             Request request = Request(
@@ -200,7 +200,7 @@ class _DocListState extends State<DocList> with TickerProviderStateMixin {
               },
             );
           });
-        }
+        }*/
         return Center(
           child: CircularProgressIndicator(
             valueColor: animationController.drive(

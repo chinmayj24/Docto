@@ -1,7 +1,9 @@
+import 'package:docto/models/request.dart';
 import 'package:docto/provider/doctor_provider.dart';
 import 'package:docto/screens/chatscreens/chatlist_screen.dart';
 import 'package:docto/screens/doctor_profile.dart';
 import 'package:docto/screens/pickup/pickup_layout.dart';
+import 'package:docto/screens/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -211,7 +213,14 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                             ),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Requests(),
+                            ),
+                          );
+                        },
                         child: Text(
                           "Consult",
                           style: TextStyle(

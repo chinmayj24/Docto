@@ -1,7 +1,11 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docto/screens/doctor_profilepic.dart';
 import 'package:flutter/material.dart';
 import 'package:docto/resources/firebase_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../constants.dart';
 
 class DoctorSignUpPage extends StatefulWidget {
   final User user;
@@ -29,9 +33,11 @@ class _DoctorSignUpState extends State<DoctorSignUpPage> {
   static final inactiveButtonColor = Colors.white;
 
   String _imageUrl = "";
-
+  String ref;
   User user;
+  QuerySnapshot result;
   FirebaseRepository _repository = FirebaseRepository();
+  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   _DoctorSignUpState({this.user});
 
@@ -40,6 +46,29 @@ class _DoctorSignUpState extends State<DoctorSignUpPage> {
     _email = new TextEditingController(text: user.email);
     getUser();
     super.initState();
+  }
+  void showAlertDialogOnOkCallback(){
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.ERROR,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'Error',
+      desc:'Your referal code doesn\'t match',
+
+
+      btnOkOnPress: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      onDissmissCallback: (type) {
+        debugPrint('Dialog Dissmiss from callback $type');
+      },
+
+    ).show();
+  }
+  Future<String> getAvailableDoctors() async {
+    result = await firestore.collection(UniversalVariables.doctor).get();
+
+    return result.docs.length.toString();
   }
 
   getUser() async {
@@ -175,20 +204,29 @@ class _DoctorSignUpState extends State<DoctorSignUpPage> {
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(15))),
                       child: InkWell(
+
                         onTap: () async {
-                          _repository.addDataToDbDoctor(
-                              user,
-                              _name.text,
-                              _imageUrl,
-                              _description.text,
-                              _gender,
-                              _age.text,
-                              _location.text);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DoctorProfilePic()),
-                          );
+
+                          getAvailableDoctors().then((value) => ref=value);
+                          if(ref==_referralCode.text){
+                            _repository.addDataToDbDoctor(
+                                user,
+                                _name.text,
+                                _imageUrl,
+                                _description.text,
+                                _gender,
+                                _age.text,
+                                _location.text);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DoctorProfilePic()),
+                            );
+                          }
+                          else{
+                            showAlertDialogOnOkCallback();
+                          }
+
                         },
                         child: Center(
                           child: Text(

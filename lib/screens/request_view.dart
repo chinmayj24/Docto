@@ -56,9 +56,9 @@ class RequestLayout extends StatelessWidget {
                   child: Align(
                     alignment: Alignment(-1, 0),
                     child: Text(
-                      patientName(snapshot.data.docs[index]['request_id']),
+                      patient.name,
                       style: TextStyle(
-                        // fontSize: 10.0,
+                         fontSize: 10.0,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

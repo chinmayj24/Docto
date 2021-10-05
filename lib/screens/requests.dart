@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docto/constants.dart';
 import 'package:docto/models/request.dart';
+import 'package:docto/provider/doctor_provider.dart';
 import 'package:docto/screens/request_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Requests extends StatefulWidget {
   @override
@@ -11,15 +13,17 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  DoctorProvider doctor ;
 
-  Future<String> patientName(String uid) async {
+  /*Future<String> patientName(String uid) async {
     DocumentSnapshot res =
         await firestore.collection(UniversalVariables.patient).doc(uid).get();
     return res.data()["name"];
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    doctor =  Provider.of<DoctorProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Color(0xFFF2F6FE),
       appBar: AppBar(
@@ -28,10 +32,11 @@ class _RequestsState extends State<Requests> {
         centerTitle: true,
         titleSpacing: 0.0,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
+
               width: MediaQuery.of(context).size.width * 0.17,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -53,6 +58,7 @@ class _RequestsState extends State<Requests> {
                 ),
               ),
             ),
+            Spacer(),
             Container(
               width: MediaQuery.of(context).size.width * 0.3,
               height: MediaQuery.of(context).size.height * 0.2,
@@ -63,11 +69,12 @@ class _RequestsState extends State<Requests> {
                     child: Image.asset("assets/images/logo4.jpeg")),
               ),
             ),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.only(right: 15),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    "https://cdn.icon-icons.com/icons2/2643/PNG/512/male_man_people_person_avatar_white_tone_icon_159363.png"),
+                    doctor.getDoctor.profilePhoto),
                 // AssetImage(
                 //     "assets/person.jpg"), // TODO: Network image of the user
                 radius: MediaQuery.of(context).size.height * 0.03,

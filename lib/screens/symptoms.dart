@@ -1,9 +1,13 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docto/constants.dart';
-import 'package:docto/models/patient.dart';
+import 'package:docto/models/contacts.dart';
+import 'package:docto/models/request.dart';
+
 import 'package:docto/provider/patient_provider.dart';
 import 'package:docto/resources/firebase_repository.dart';
 import 'package:docto/screens/doctor_list.dart';
+import 'package:docto/screens/patient_homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +24,7 @@ class _SymptomsState extends State<Symptoms> {
   PatientProvider patientProvider;
   String patientUid;
   // Patient patient = Patient();
+  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseRepository _repository = FirebaseRepository();
 
   String symptoms;
@@ -29,13 +34,52 @@ class _SymptomsState extends State<Symptoms> {
   bool flagFatigue = false;
   bool flagBreathingProblems = false;
   bool flagVaccine = false;
+  QuerySnapshot result;
 
+  Future getAvailableDoctors() async {
+    result = await firestore
+        .collection(UniversalVariables.doctor)
+        .where("availability", isEqualTo: true)
+        .get();
+
+    return result.docs;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAvailableDoctors();
+  }
   @override
   Widget build(BuildContext context) {
     patientProvider = Provider.of<PatientProvider>(context, listen: false);
     patientProvider.refreshPatient();
     patientUid = patientProvider.getPatient.uid;
 
+    void addSymptomsToFirebase() async {
+      await _repository.updateDataToDb(
+          UniversalVariables.patient, patientUid, "symptoms", symptoms);
+    }
+    void showAlertDialogOnOkCallback(){
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.INFO,
+        animType: AnimType.BOTTOMSLIDE,
+        title: 'Alert',
+        desc:
+        'Currently there are no available doctors. Whenever one becomes available, he/she will revert to you. Sorry for the inconvenience caused.',
+
+
+        btnOkOnPress: () {
+          Navigator.of(context, rootNavigator: true).pop();
+        },
+        onDissmissCallback: (type) {
+          debugPrint('Dialog Dissmiss from callback $type');
+        },
+
+      ).show();
+    }
     return Scaffold(
       backgroundColor: Color(0xFFF2F6FE),
       appBar: AppBar(
@@ -144,7 +188,7 @@ class _SymptomsState extends State<Symptoms> {
                       title: "Breathing Problems",
                       imageUrl: "assets/images/breathing problems.jpeg",
                       col:
-                          flagBreathingProblems ? activeColour : inactiveColour,
+                      flagBreathingProblems ? activeColour : inactiveColour,
                     ),
                   ),
                   GestureDetector(
@@ -187,7 +231,7 @@ class _SymptomsState extends State<Symptoms> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText:
-                            'Enter extra symptoms(Each separated by a comma)',
+                        'Enter extra symptoms(Each separated by a comma)',
                       ),
                     ),
                   ),
@@ -217,14 +261,28 @@ class _SymptomsState extends State<Symptoms> {
                           symptoms = addSymptoms();
                         });
                         addSymptomsToFirebase();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DocList(
+                        if(result.docs.length>0){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DocList(
                                 // symptoms: symptoms,
-                                ),
-                          ),
-                        );
+                              ),
+                            ),
+                          );
+                        }
+                        else{
+
+                          Request contact = Request(
+                              uid: patientProvider.getPatient.uid, adddedOn: Timestamp.now());
+                          firestore
+                              .collection('requests')
+                              .doc(patientProvider.getPatient.uid)
+                              .set(contact.toMap(contact));
+                          showAlertDialogOnOkCallback();
+
+                        }
+
                       },
                       child: Text(
                         "Next",
@@ -270,10 +328,7 @@ class _SymptomsState extends State<Symptoms> {
     return temp;
   }
 
-  void addSymptomsToFirebase() async {
-    await _repository.updateDataToDb(
-        UniversalVariables.patient, patientUid, "symptoms", symptoms);
-  }
+
 }
 
 class Card extends StatelessWidget {
