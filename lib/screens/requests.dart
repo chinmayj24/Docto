@@ -13,7 +13,7 @@ class Requests extends StatefulWidget {
 
 class _RequestsState extends State<Requests> {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  DoctorProvider doctor ;
+  DoctorProvider doctor;
 
   /*Future<String> patientName(String uid) async {
     DocumentSnapshot res =
@@ -23,7 +23,7 @@ class _RequestsState extends State<Requests> {
 
   @override
   Widget build(BuildContext context) {
-    doctor =  Provider.of<DoctorProvider>(context, listen: false);
+    doctor = Provider.of<DoctorProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Color(0xFFF2F6FE),
       appBar: AppBar(
@@ -36,7 +36,6 @@ class _RequestsState extends State<Requests> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(
-
               width: MediaQuery.of(context).size.width * 0.17,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -74,9 +73,8 @@ class _RequestsState extends State<Requests> {
               padding: const EdgeInsets.only(right: 15),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    doctor.getDoctor.profilePhoto),
-                // AssetImage(
-                //     "assets/person.jpg"), // TODO: Network image of the user
+                  doctor.getDoctor.profilePhoto,
+                ), // TODO: Network image of the user
                 radius: MediaQuery.of(context).size.height * 0.03,
                 backgroundColor: Colors.transparent,
               ),

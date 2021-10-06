@@ -2,7 +2,10 @@ import 'package:docto/constants.dart';
 import 'package:docto/models/patient.dart';
 import 'package:docto/models/request.dart';
 import 'package:docto/resources/firebase_methods.dart';
+import 'package:docto/widgets/reqaccept_dialogbox.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/doctor_provider.dart';
 
 class Request_View extends StatelessWidget {
   final Request request;
@@ -26,9 +29,11 @@ class Request_View extends StatelessWidget {
 class RequestLayout extends StatelessWidget {
   final Patient patient;
   RequestLayout({this.patient});
+  DoctorProvider doctorProvider;
 
   @override
   Widget build(BuildContext context) {
+    doctorProvider = Provider.of<DoctorProvider>(context, listen: false);
     return Container(
       child: Column(
         children: <Widget>[
@@ -58,8 +63,8 @@ class RequestLayout extends StatelessWidget {
                     child: Text(
                       patient.name,
                       style: TextStyle(
-                         fontSize: 10.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -78,6 +83,18 @@ class RequestLayout extends StatelessWidget {
                     ),
                     onPressed: () {
                       //TODO: Add to contacts and send msg from doc to patient
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ReqAcceptDialogBox(
+                              title: "Accept Request?",
+                              desc:
+                                  "This will accept the request and connect you with the patient.",
+                              text: "Yes",
+                              doctorUid: doctorProvider.getDoctor.uid,
+                              patientUid: patient.uid,
+                            );
+                          });
                     },
                     child: Text(
                       "Start",
@@ -91,10 +108,7 @@ class RequestLayout extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.008,
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.025,
+            height: MediaQuery.of(context).size.height * 0.02,
           ),
         ],
       ),
